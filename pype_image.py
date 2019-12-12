@@ -58,7 +58,7 @@ class ImagePype:
         self.execute(cmd)
 
     def clearKeywords(self, fpath):
-        cmd = [b'-overwrite_original_in_place', bytes('{0}=\"\"'.format(self.meta_loc), 'utf8')] + [fpath]
+        cmd = [b'-overwrite_original_in_place', bytes('{0}='''.format(self.meta_loc), 'utf8')] + [fpath]
         self.execute(cmd)
 
 
