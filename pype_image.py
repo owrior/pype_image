@@ -44,7 +44,7 @@ class ImagePype:
     def execute(self, args):
         if not self.running:
             raise ValueError("No pypline running.")
-        self._process.stdin.write("\n".join(args + [b'-execute\n'])) # Changed so could cause error
+        self._process.stdin.write(b"\n".join(args + [b'-execute\n'])) # Changed so could cause error
         self._process.stdin.flush()
         output = b""
         fd = self._process.stdout.fileno()
@@ -52,6 +52,13 @@ class ImagePype:
             output += os.read(fd, block_size)
         return output.strip()[:-len(indicator)]
 
-    def addKeywords(self, metadata):
+    def addKeywords(self, metadata, fpath):
+        kws = [bytes("{0}+=\"{1}\"".format(self.meta_loc, kw.replace(" ", r" ")), 'utf8') for kw in metadata]
+        cmd = [b'-overwrite_original_in_place'] + kws + [fpath]
+        self.execute(cmd)
+
+    def clearKeywords(self, fpath):
+        cmd = [b'-overwrite_original_in_place', bytes('{0}=\"\"'.format(self.meta_loc), 'utf8')] + [fpath]
+        self.execute(cmd)
 
 
